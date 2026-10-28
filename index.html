@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>دراسة تحليلية لمشروع مصر الرقمية – جامعة الفيوم</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#060a12;--s:rgba(255,255,255,.055);--b:rgba(255,255,255,.12);--t:#eef2f8;--m:#9aa7bb;--a:#2dd4bf;--g:#f2c14e;--r:20px}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+body{font-family:Cairo,Tahoma,sans-serif;background:var(--bg);color:var(--t);line-height:1.7;overflow-x:hidden;
+background-image:radial-gradient(700px 420px at 85% -5%,rgba(45,212,191,.18),transparent),radial-gradient(600px 400px at 5% 30%,rgba(242,193,78,.10),transparent),radial-gradient(700px 500px at 60% 85%,rgba(99,102,241,.13),transparent)}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+:focus-visible{outline:2px solid var(--g);outline-offset:2px}
+nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:18px;padding:10px 5vw;background:rgba(6,10,18,.72);backdrop-filter:blur(16px);border-bottom:1px solid var(--b)}
+nav .logo{font-weight:900;color:var(--g);white-space:nowrap}
+nav .links{display:flex;gap:4px;margin-inline-start:auto;overflow-x:auto;scrollbar-width:none}
+nav .links a{padding:6px 16px;border-radius:99px;color:var(--m);font-weight:600;white-space:nowrap;transition:.25s}
+nav .links a:hover,nav .links a.on{background:var(--s);color:var(--t);box-shadow:0 0 0 1px var(--b),0 0 18px rgba(45,212,191,.25)}
+header.hero{padding:44px 5vw 22px;text-align:center}
+.hero small{color:var(--m)}
+.hero h1{font-size:clamp(1.7rem,4.6vw,3.4rem);font-weight:900;line-height:1.35;margin:6px 0 4px;background:linear-gradient(100deg,#fff 20%,var(--a) 60%,var(--g));-webkit-background-clip:text;background-clip:text;color:transparent;animation:in 1s both}
+.hero p{color:var(--m)}
+@keyframes in{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+section{padding:34px 5vw;max-width:1180px;margin:auto}
+h2{font-size:1.5rem;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+h2::before{content:"";width:6px;height:26px;border-radius:4px;background:linear-gradient(var(--a),var(--g))}
+.glass{background:var(--s);border:1px solid var(--b);border-radius:var(--r);backdrop-filter:blur(12px);box-shadow:0 20px 60px rgba(0,0,0,.45)}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .8s,transform .8s}.rv.show{opacity:1;transform:none}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn{padding:8px 18px;border-radius:12px;background:var(--s);border:1px solid var(--b);font-weight:600;font-size:.92rem;transition:.25s;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{transform:translateY(-2px);border-color:var(--a);box-shadow:0 6px 22px rgba(45,212,191,.25)}
+.btn.pri{background:linear-gradient(120deg,var(--a),#38bdf8);color:#04211d;border:0}
+/* player */
+.pl{position:relative;aspect-ratio:16/9;background:#000;border-radius:var(--r);overflow:hidden;border:1px solid var(--b);box-shadow:0 0 70px rgba(45,212,191,.2),0 25px 70px rgba(0,0,0,.6);direction:ltr}
+.pl:fullscreen{border-radius:0;aspect-ratio:auto}
+.pl video,.pl iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000}
+.big{position:absolute;inset:0;margin:auto;width:84px;height:84px;border-radius:50%;background:rgba(45,212,191,.9);color:#032;display:grid;place-items:center;font-size:30px;box-shadow:0 0 0 0 rgba(45,212,191,.6);animation:pulse 2s infinite;transition:.3s;z-index:3}
+.pl.play .big{opacity:0;transform:scale(1.6);pointer-events:none;animation:none}
+@keyframes pulse{70%{box-shadow:0 0 0 26px rgba(45,212,191,0)}}
+.ld,.er{position:absolute;inset:0;z-index:4;display:grid;place-content:center;justify-items:center;gap:10px;background:rgba(6,10,18,.88);text-align:center;direction:rtl;padding:20px}
+.er{display:none}.ld.h{display:none}
+.sp{width:44px;height:44px;border-radius:50%;border:4px solid var(--b);border-top-color:var(--a);animation:rot 1s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+.ctl{position:absolute;inset-inline:0;bottom:0;z-index:5;padding:30px 14px 10px;background:linear-gradient(transparent,rgba(0,0,0,.85));transition:opacity .35s,transform .35s}
+.pl.idle .ctl{opacity:0;transform:translateY(10px);pointer-events:none}.pl.idle{cursor:none}
+.sk{position:relative;height:6px;border-radius:9px;background:rgba(255,255,255,.2);cursor:pointer;margin-bottom:10px;transition:height .2s}
+.sk:hover{height:9px}
+.sk .bf,.sk .pg{position:absolute;inset-block:0;left:0;border-radius:9px}
+.sk .bf{background:rgba(255,255,255,.28)}.sk .pg{background:linear-gradient(90deg,var(--a),var(--g))}
+.sk .pg::after{content:"";position:absolute;right:-7px;top:50%;width:14px;height:14px;margin-top:-7px;border-radius:50%;background:#fff;box-shadow:0 0 10px var(--a)}
+.row{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.ib{min-width:38px;height:38px;border-radius:10px;font-size:17px;transition:.2s;padding:0 8px}
+.ib:hover{background:rgba(255,255,255,.16);transform:scale(1.1)}
+.tm{font-size:.85rem;font-variant-numeric:tabular-nums;color:#dfe7f2;margin:0 8px}
+.vol{width:80px;accent-color:var(--a)}
+.sp2{margin-left:auto}
+.menu{position:absolute;bottom:62px;right:14px;z-index:6;padding:8px;display:none;grid-template-columns:repeat(2,1fr);gap:4px;background:rgba(10,15,26,.95);border:1px solid var(--b);border-radius:14px;animation:in .25s}
+.menu.o{display:grid}
+.menu button{padding:4px 14px;border-radius:8px;font-size:.88rem}.menu button:hover,.menu button.on{background:var(--a);color:#032}
+.toast{position:absolute;top:14px;left:50%;transform:translateX(-50%);z-index:6;padding:4px 16px;border-radius:99px;background:rgba(0,0,0,.7);font-size:.9rem;opacity:0;transition:.3s;direction:rtl}
+.toast.s{opacity:1}
+.keys{color:var(--m);font-size:.82rem;margin-top:10px}
+/* viewers */
+.vw{position:relative;border-radius:var(--r);overflow:hidden;border:1px solid var(--b);background:#0c1220;transition:all .6s cubic-bezier(.2,.8,.2,1)}
+.vw iframe{display:block;border:0;width:100%;background:#fff}
+#sl .vw{aspect-ratio:16/9}#sl iframe{height:100%}
+#sl .vw:fullscreen{animation:morph .7s cubic-bezier(.2,.8,.2,1);border-radius:0}
+@keyframes morph{from{clip-path:inset(18% 18% round 28px);opacity:.4;transform:scale(.9)}to{clip-path:inset(0);opacity:1;transform:none}}
+.pdfbox{height:78vh;overflow:auto;background:#1b2234}.pdfbox iframe{height:100%;min-width:100%;transition:width .4s,height .4s}
+.pdfbox:fullscreen{height:100vh}
+.dl{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:22px 26px}.zl{min-width:52px;text-align:center;font-variant-numeric:tabular-nums}
+.note{color:var(--m);font-size:.85rem;margin-top:10px}
+.ovl{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:10px;background:#0c1220;text-align:center;padding:20px;transition:opacity .5s}
+.ovl.h{opacity:0;pointer-events:none}
+/* team */
+.sup{padding:18px 22px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:6px 30px;align-items:center}
+.sup b{color:var(--g)}
+.team{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.mem{padding:22px;text-align:center;transition:.3s}
+.mem:hover{transform:translateY(-5px);border-color:var(--a)}
+.av{width:54px;height:54px;margin:0 auto 10px;border-radius:16px;display:grid;place-items:center;font-weight:900;font-size:1.3rem;background:linear-gradient(135deg,var(--a),var(--g));color:#04211d}
+.mem h3{font-size:1.1rem}.mem span{color:var(--m);font-size:.85rem}
+footer{margin-top:40px;padding:36px 5vw;text-align:center;border-top:1px solid var(--b);background:rgba(0,0,0,.3);color:var(--m)}
+footer strong{color:var(--t);display:block;font-size:1.1rem}
+footer p{margin:10px auto;max-width:620px}
+@media(max-width:640px){.vol{width:54px}.big{width:64px;height:64px}.ib{min-width:34px;height:34px}.tm{margin:0 2px}.sp2{margin-left:0}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<nav>
+ <a class="logo" href="#top">مصر الرقمية</a>
+ <div class="links">
+  <a href="#video">الفيديو</a><a href="#slides">PowerPoint</a><a href="#pdf">PDF</a><a href="#team">فريق العمل</a>
+ </div>
+</nav>
+
+<header class="hero" id="top">
+ <small>أخلاقيات المهنة · جامعة الفيوم</small>
+ <h1>دراسة تحليلية لمشروع مصر الرقمية</h1>
+ <p>تحت إشراف: دكتور مهجة إمام إمبابي</p>
+</header>
+
+<section id="video" class="rv">
+ <h2>الفيديو</h2>
+ <div class="pl" id="pl" tabindex="0">
+  <video id="v" preload="metadata" playsinline></video>
+  <button class="big" id="big" aria-label="تشغيل">▶</button>
+  <div class="ld" id="ld"><div class="sp"></div><span>جارٍ تحميل الفيديو…</span></div>
+  <div class="er" id="er"><b>تعذّر تشغيل الفيديو داخل المشغل المخصص</b><span style="color:var(--m)">يحدث هذا أحيانًا مع ملفات Google Drive الكبيرة. جارٍ التحويل إلى مشغل Drive الاحتياطي.</span><a class="btn pri" id="erOpen" target="_blank" rel="noopener">فتح الفيديو في Drive</a></div>
+  <div class="toast" id="toast"></div>
+  <div class="menu" id="menu"></div>
+  <div class="ctl" id="ctl">
+   <div class="sk" id="sk"><div class="bf" id="bf"></div><div class="pg" id="pg"></div></div>
+   <div class="row">
+    <button class="ib" id="pp" title="تشغيل / إيقاف (Space)">▶</button>
+    <button class="ib" id="bk" title="تأخير 10 ثوانٍ (J)">⏪</button>
+    <button class="ib" id="fw" title="تقديم 10 ثوانٍ (L)">⏩</button>
+    <span class="tm" id="tm">0:00 / 0:00</span>
+    <button class="ib" id="vd" title="خفض الصوت">🔉</button>
+    <button class="ib" id="mu" title="كتم (M)">🔊</button>
+    <button class="ib" id="vu" title="رفع الصوت">🔊+</button>
+    <input class="vol" id="vol" type="range" min="0" max="100" value="100" aria-label="مستوى الصوت">
+    <span class="tm" id="vp">100%</span>
+    <span class="sp2"></span>
+    <button class="ib" id="sd" title="السرعة (&lt; &gt;)">1x</button>
+    <button class="ib" id="pip" title="صورة داخل صورة (P)">⧉</button>
+    <button class="ib" id="fs" title="ملء الشاشة (F)">⛶</button>
+   </div>
+  </div>
+ </div>
+ <p class="keys">اختصارات: Space/K تشغيل · ←/→ ±5ث · J/L ±10ث · ↑/↓ الصوت · M كتم · F ملء الشاشة · P صورة داخل صورة · &lt; &gt; السرعة · 0–9 قفز للنسبة</p>
+ <div class="bar"><a class="btn" id="vOpen" target="_blank" rel="noopener">فتح في Google Drive</a><a class="btn" id="vDl" target="_blank" rel="noopener">تنزيل الفيديو</a></div>
+</section>
+
+<section id="slides" class="rv">
+ <h2>عرض PowerPoint</h2>
+ <div class="glass dl">
+  <div><h3>عرض البحث التقديمي</h3><p class="note" style="margin:0">ملف PowerPoint (PPTX) جاهز للتنزيل.</p></div>
+  <a class="btn pri" id="slDl" target="_blank" rel="noopener">تنزيل PowerPoint</a>
+ </div>
+</section>
+
+<section id="pdf" class="rv">
+ <h2>البحث الكامل PDF</h2>
+ <div class="vw" id="pdBox">
+  <div class="pdfbox" id="pdS"><iframe id="pdF" title="البحث الكامل" loading="lazy"></iframe></div>
+  <div class="ovl" id="pdL"><div class="sp"></div><span>جارٍ تحميل البحث…</span></div>
+ </div>
+ <div class="bar">
+  <button class="btn" id="zo">− تصغير</button><span class="btn zl" id="zl">100%</span><button class="btn" id="zi">+ تكبير</button>
+  <button class="btn" id="pdFs">ملء الشاشة</button>
+  <a class="btn pri" id="pdOpen" target="_blank" rel="noopener">فتح في Google Drive</a>
+  <a class="btn" id="pdDl" target="_blank" rel="noopener">تنزيل PDF</a>
+ </div>
+ <p class="note">التنقل بين الصفحات يتم من شريط عارض Drive داخل الإطار (أو بالتمرير). عرض Drive لا يسمح للموقع بقراءة رقم الصفحة الحالية.</p>
+</section>
+
+<section id="team" class="rv">
+ <h2>فريق العمل</h2>
+ <div class="glass sup"><span>المشروع: <b>دراسة تحليلية لمشروع مصر الرقمية</b></span><span>المادة: <b>أخلاقيات المهنة</b></span><span>الجامعة: <b>جامعة الفيوم</b></span><span>الإشراف: <b>دكتور مهجة إمام إمبابي</b></span></div>
+ <div class="team" id="tm2"></div>
+</section>
+
+<footer>
+ <strong>دراسة تحليلية لمشروع مصر الرقمية</strong>
+ <div>أخلاقيات المهنة · جامعة الفيوم</div>
+ <p>تم إعداد هذا المشروع في إطار المتطلبات الأكاديمية لمادة أخلاقيات المهنة – جامعة الفيوم</p>
+ <a class="btn" href="#top">↑ العودة إلى الأعلى</a>
+</footer>
+
+<script>
+/* ===== مكان واحد لتعديل الروابط ===== */
+const LINKS={
+ video:"https://drive.google.com/file/d/1j9Co_cuXRW-7ZHGMm5pkMNBZnJb6EAiL/view?usp=sharing",
+ pptx:"https://docs.google.com/presentation/d/12OnDeAfyH8Jr-7AIbp0qd0XKS3al5Pvx/edit?usp=sharing&ouid=108584979978343398499&rtpof=true&sd=true",
+ pdf:"https://drive.google.com/file/d/16h1XpnOIgEDM9s-I9oN2nNmJ8-zd854R/view?usp=sharing"
+};
+const TEAM=["أحمد علي","بيشوي رمسيس","جورج عماد","جون جورج","ابرام سامح","كيرلس سامح"];
+/* ================================== */
+const $=id=>document.getElementById(id);
+const ID=u=>(u.match(/\/d\/([\w-]+)/)||[])[1];
+const vid=ID(LINKS.video),sid=ID(LINKS.pptx),pid=ID(LINKS.pdf);
+const U={
+ vDirect:`https://drive.google.com/uc?export=download&id=${vid}`,
+ vPrev:`https://drive.google.com/file/d/${vid}/preview`,
+ sDl:`https://docs.google.com/presentation/d/${sid}/export/pptx`,
+ pPrev:`https://drive.google.com/file/d/${pid}/preview`,
+ pDl:`https://drive.google.com/uc?export=download&id=${pid}`
+};
+$('vOpen').href=$('erOpen').href=LINKS.video;$('vDl').href=U.vDirect;
+$('slDl').href=U.sDl;
+$('pdOpen').href=LINKS.pdf;$('pdDl').href=U.pDl;
+
+/* team */
+$('tm2').innerHTML=TEAM.map((n,i)=>`<div class="glass mem rv" style="transition-delay:${i*90}ms"><div class="av">${n[0]}</div><h3>${n}</h3><span>عضو الفريق</span></div>`).join('');
+
+/* reveal + active nav */
+const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('show');io.unobserve(x.target)}}),{threshold:.08});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+const links=[...document.querySelectorAll('nav .links a')];
+const so=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)links.forEach(a=>a.classList.toggle('on',a.hash==='#'+x.target.id))}),{rootMargin:'-45% 0px -50% 0px'});
+document.querySelectorAll('section').forEach(s=>so.observe(s));
+
+/* ===== video player ===== */
+const pl=$('pl'),v=$('v');let fell=false,idleT,tT;
+const fmt=s=>{if(!isFinite(s))return'0:00';s=Math.floor(s);const h=Math.floor(s/3600),m=Math.floor(s%3600/60),c=s%60;return(h?h+':'+String(m).padStart(2,'0'):m)+':'+String(c).padStart(2,'0')};
+const toast=t=>{const e=$('toast');e.textContent=t;e.classList.add('s');clearTimeout(tT);tT=setTimeout(()=>e.classList.remove('s'),1100)};
+function fallback(){
+ if(fell)return;fell=true;v.pause();
+ $('ld').classList.add('h');$('er').style.display='grid';
+ setTimeout(()=>{$('er').style.display='none';['big','ctl','menu'].forEach(i=>$(i).style.display='none');
+  const f=document.createElement('iframe');f.src=U.vPrev;f.allow='autoplay;fullscreen';f.allowFullscreen=true;pl.appendChild(f)},3500);
+}
+v.src=U.vDirect;
+const wd=setTimeout(()=>{if(v.readyState<1)fallback()},12000);
+v.addEventListener('loadedmetadata',()=>{clearTimeout(wd);$('ld').classList.add('h');upd()});
+v.addEventListener('error',fallback);
+v.addEventListener('waiting',()=>{if(!fell)$('ld').classList.remove('h')});
+v.addEventListener('canplay',()=>$('ld').classList.add('h'));
+function tog(){v.paused?v.play().catch(fallback):v.pause()}
+v.addEventListener('play',()=>{pl.classList.add('play');$('pp').textContent='⏸';wake()});
+v.addEventListener('pause',()=>{pl.classList.remove('play','idle');$('pp').textContent='▶'});
+v.addEventListener('ended',()=>{$('pp').textContent='↻'});
+function upd(){const d=v.duration||0;$('pg').style.width=d?v.currentTime/d*100+'%':0;$('tm').textContent=fmt(v.currentTime)+' / '+fmt(d);
+ if(v.buffered.length&&d)$('bf').style.width=v.buffered.end(v.buffered.length-1)/d*100+'%'}
+['timeupdate','progress','durationchange'].forEach(e=>v.addEventListener(e,upd));
+const seek=t=>{v.currentTime=Math.max(0,Math.min(v.duration||0,t));upd()};
+const sk=$('sk');
+function skx(e){const r=sk.getBoundingClientRect();seek(((e.clientX-r.left)/r.width)*v.duration)}
+let drag=false;
+sk.addEventListener('pointerdown',e=>{drag=true;sk.setPointerCapture(e.pointerId);skx(e)});
+sk.addEventListener('pointermove',e=>drag&&skx(e));
+sk.addEventListener('pointerup',()=>drag=false);
+$('big').onclick=$('pp').onclick=tog;
+v.onclick=tog;
+$('bk').onclick=()=>{seek(v.currentTime-10);toast('−10 ث')};
+$('fw').onclick=()=>{seek(v.currentTime+10);toast('+10 ث')};
+function setVol(x){x=Math.max(0,Math.min(1,x));v.volume=x;v.muted=x===0;$('vol').value=x*100;$('vp').textContent=Math.round(x*100)+'%';$('mu').textContent=x===0?'🔇':'🔊'}
+$('vol').oninput=e=>setVol(e.target.value/100);
+$('vd').onclick=()=>{setVol(v.volume-.1);toast('الصوت '+Math.round(v.volume*100)+'%')};
+$('vu').onclick=()=>{setVol(v.volume+.1);toast('الصوت '+Math.round(v.volume*100)+'%')};
+let last=1;
+$('mu').onclick=()=>{if(v.muted||v.volume===0){setVol(last||1);toast('تشغيل الصوت')}else{last=v.volume;v.muted=true;$('mu').textContent='🔇';$('vp').textContent='0%';$('vol').value=0;toast('كتم')}};
+const SP=[.25,.5,.75,1,1.25,1.5,1.75,2,2.5,3];
+$('menu').innerHTML=SP.map(s=>`<button data-s="${s}" class="${s===1?'on':''}">${s}x</button>`).join('');
+function setSp(s){v.playbackRate=s;$('sd').textContent=s+'x';document.querySelectorAll('#menu button').forEach(b=>b.classList.toggle('on',+b.dataset.s===s));toast('السرعة '+s+'x')}
+$('menu').onclick=e=>{if(e.target.dataset.s){setSp(+e.target.dataset.s);$('menu').classList.remove('o')}};
+$('sd').onclick=()=>$('menu').classList.toggle('o');
+if(!document.pictureInPictureEnabled)$('pip').style.display='none';
+const pip=()=>document.pictureInPictureElement?document.exitPictureInPicture():v.requestPictureInPicture().catch(()=>toast('غير مدعوم'));
+$('pip').onclick=pip;
+const fsT=el=>document.fullscreenElement?document.exitFullscreen():(el.requestFullscreen||el.webkitRequestFullscreen||(()=>{})).call(el);
+$('fs').onclick=()=>fsT(pl);
+function wake(){pl.classList.remove('idle');clearTimeout(idleT);if(!v.paused)idleT=setTimeout(()=>{$('menu').classList.remove('o');pl.classList.add('idle')},2600)}
+['pointermove','pointerdown','keydown'].forEach(e=>pl.addEventListener(e,wake));
+document.addEventListener('keydown',e=>{
+ if(fell||e.ctrlKey||e.metaKey||e.altKey)return;
+ if(/INPUT|TEXTAREA|IFRAME/.test(e.target.tagName)&&e.target.type!=='range')return;
+ if(!(pl.matches(':hover')||pl.contains(document.activeElement)||document.fullscreenElement===pl))return;
+ const k=e.key.toLowerCase();let h=true;
+ if(k===' '||k==='k'){if(e.target.tagName==='BUTTON'&&k===' ')return;tog()}
+ else if(k==='arrowright')seek(v.currentTime+5);else if(k==='arrowleft')seek(v.currentTime-5);
+ else if(k==='l')$('fw').click();else if(k==='j')$('bk').click();
+ else if(k==='arrowup'){setVol(v.volume+.05);toast('الصوت '+Math.round(v.volume*100)+'%')}
+ else if(k==='arrowdown'){setVol(v.volume-.05);toast('الصوت '+Math.round(v.volume*100)+'%')}
+ else if(k==='m')$('mu').click();else if(k==='f')$('fs').click();else if(k==='p')pip();
+ else if(k==='>'||k==='.'){const i=SP.indexOf(v.playbackRate);setSp(SP[Math.min(SP.length-1,i+1)])}
+ else if(k==='<'||k===','){const i=SP.indexOf(v.playbackRate);setSp(SP[Math.max(0,i-1)])}
+ else if(/^[0-9]$/.test(k))seek(v.duration*(+k/10));
+ else h=false;
+ if(h)e.preventDefault();
+});
+
+/* ===== pdf ===== */
+const pdF=$('pdF');pdF.onload=()=>$('pdL').classList.add('h');pdF.src=U.pPrev;
+let z=1;const zs=()=>{pdF.style.width=z*100+'%';pdF.style.height=z*100+'%';$('zl').textContent=Math.round(z*100)+'%'};
+$('zi').onclick=()=>{z=Math.min(2.5,+(z+.25).toFixed(2));zs()};
+$('zo').onclick=()=>{z=Math.max(.5,+(z-.25).toFixed(2));zs()};
+$('pdFs').onclick=()=>fsT($('pdS'));
+</script>
+</body>
+</html>
